@@ -12,7 +12,9 @@
                   Upload een Excel-bestand (.xlsx). Elk tabblad wordt omgezet
                   naar een SKOS Turtle-bestand (.ttl) en gebundeld in één zip.
                   Download het
-                  <a href="/api/template" download="codelijst-sjabloon.xlsx"
+                  <a
+                    href="/codelijsten-generator/api/template"
+                    download="codelijst-sjabloon.xlsx"
                     >Excel-sjabloon</a
                   >
                   om te starten.
@@ -33,7 +35,7 @@
                   limit-to-allowed-file-types
                   @upload-file-added="onFileAdded"
                   @upload-removed-file="onFileRemoved"
-                  url="/api/convert"
+                  url="/codelijsten-generator/api/convert"
                 />
               </vl-column>
               <vl-column>
@@ -89,7 +91,8 @@
                   {{ errorMessage }}
                   <ul v-if="errorDetails.length">
                     <li v-for="(e, i) in errorDetails" :key="i">
-                      <strong>{{ e.sheet }}</strong>: {{ e.error }}
+                      <strong>{{ e.sheet }}</strong
+                      >: {{ e.error }}
                     </li>
                   </ul>
                 </vl-alert>
@@ -137,7 +140,7 @@ async function generate() {
     const formData = new FormData()
     formData.append('file', selectedFile.value)
 
-    const response = await fetch('/api/convert', {
+    const response = await fetch('/codelijsten-generator/api/convert', {
       method: 'POST',
       body: formData,
     })
@@ -147,9 +150,12 @@ async function generate() {
       try {
         const json = JSON.parse(text)
         if (json.data?.errors) errorDetails.value = json.data.errors
-        throw new Error(json.statusMessage || json.message || response.statusText)
+        throw new Error(
+          json.statusMessage || json.message || response.statusText,
+        )
       } catch (e) {
-        if (e instanceof SyntaxError) throw new Error(text || response.statusText)
+        if (e instanceof SyntaxError)
+          throw new Error(text || response.statusText)
         throw e
       }
     }
@@ -175,7 +181,10 @@ async function generate() {
 
     state.value = 'success'
   } catch (err: unknown) {
-    errorMessage.value = err instanceof Error ? err.message : 'Er ging iets mis bij het converteren'
+    errorMessage.value =
+      err instanceof Error
+        ? err.message
+        : 'Er ging iets mis bij het converteren'
     state.value = 'error'
   }
 }

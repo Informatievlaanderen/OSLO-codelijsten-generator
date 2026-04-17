@@ -1,6 +1,6 @@
 ARG VERSION
 
-FROM informatievlaanderen/codelijsten-base:${VERSION} as BUILD
+FROM informatievlaanderen/codelijsten-generator-base:${VERSION} as BUILD
 
 WORKDIR /app
 

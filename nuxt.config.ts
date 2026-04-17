@@ -13,7 +13,7 @@ export default defineNuxtConfig({
     },
   },
   app: {
-    baseURL: '/doc',
+    baseURL: '/codelijsten-generator',
     head: {
       title: 'Codelijsten Generator',
       htmlAttrs: {
