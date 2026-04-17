@@ -6,3 +6,6 @@
 
   1.0.3
   Fix for `codelist-generator` not being callable in child process inside docker container
+
+  1.0.4
+  Place the template at the correct API endpoint
