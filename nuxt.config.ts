@@ -3,11 +3,19 @@ import { fileURLToPath } from 'url'
 
 export default defineNuxtConfig({
   // https://nuxt.com/docs/getting-started/deployment#static-hosting
-  ssr: true,
-
+  routeRules: {
+    '/': { ssr: true },
+  },
+  runtimeConfig: {
+    // public runtime env variables
+    public: {
+      ENVIRONMENT: process.env.ENVIRONMENT || 'Production',
+    },
+  },
   app: {
+    baseURL: '/doc',
     head: {
-      title: 'OSLO-frontend-template',
+      title: 'Codelijsten Generator',
       htmlAttrs: {
         lang: 'nl',
       },
@@ -22,7 +30,6 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { hid: 'description', name: 'description', content: '' },
         { name: 'format-detection', content: 'telephone=no' },
       ],
       link: [
@@ -38,18 +45,9 @@ export default defineNuxtConfig({
       ],
     },
   },
-
-  // needed for nuxt content assets that keeps hanging on build: https://github.com/davestewart/nuxt-content-assets/issues/49#issuecomment-1812810278
-  hooks: {
-    close: (nuxt) => {
-      if (!nuxt.options._prepare) process.exit()
-    },
-  },
-
   // Alias declaration for easier access to components directory
   alias: {
     '@components': fileURLToPath(new URL('./components', import.meta.url)),
-    '@content': fileURLToPath(new URL('./content', import.meta.url)),
     '@types': fileURLToPath(new URL('./types', import.meta.url)),
   },
 
@@ -63,13 +61,5 @@ export default defineNuxtConfig({
   // Plugins to run before rendering page: https://nuxt.com/docs/api/configuration/nuxt-config#plugins-1
   plugins: [{ src: '~/plugins/webcomponents.js', mode: 'client' }],
 
-  // Modules: https://nuxt.com/docs/api/configuration/nuxt-config#modules-1
-  modules: [
-    // https://github.com/davestewart/nuxt-content-assets
-    'nuxt-content-assets', // make sure to add before content!
-    // https://content.nuxtjs.org/
-    '@nuxt/content',
-  ],
-
-  compatibilityDate: '2025-02-17',
+  compatibilityDate: '2025-04-17',
 })
