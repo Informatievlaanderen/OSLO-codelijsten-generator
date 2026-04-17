@@ -1,6 +1,6 @@
 {
   "name": "oslo-codelijsten-generator",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "engines": {
     "npm": ">=8.0.0",
     "node": ">=22.0.0"

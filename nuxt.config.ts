@@ -58,8 +58,14 @@ export default defineNuxtConfig({
     transpile: ['@govflanders/vl-widget-polyfill'],
   },
 
+  nitro: {
+    externals: {
+      inline: ['xlsx'],
+    },
+  },
+
   // Plugins to run before rendering page: https://nuxt.com/docs/api/configuration/nuxt-config#plugins-1
   plugins: [{ src: '~/plugins/webcomponents.js', mode: 'client' }],
 
-  compatibilityDate: '2025-04-17',
+  compatibilityDate: '2026-04-17',
 })

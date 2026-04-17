@@ -3,17 +3,24 @@ import { promisify } from 'util'
 import { execFile } from 'child_process'
 import { writeFile, readFile, mkdtemp, rm } from 'fs/promises'
 import { tmpdir } from 'os'
-import { join, resolve } from 'path'
+import { join } from 'path'
 import * as XLSX from 'xlsx'
 import JSZip from 'jszip'
 
 const execFileAsync = promisify(execFile)
-const CLI_BIN = resolve(process.cwd(), 'node_modules/.bin/oslo-codelist-generator')
 
 async function runCli(inputPath: string, outputPath: string): Promise<void> {
   const { stdout, stderr } = await execFileAsync(
-    CLI_BIN,
-    ['--input', inputPath, '--output', outputPath, '--language', 'nl', '--silent'],
+    'oslo-codelist-generator',
+    [
+      '--input',
+      inputPath,
+      '--output',
+      outputPath,
+      '--language',
+      'nl',
+      '--silent',
+    ],
     { timeout: 30_000 },
   )
   if (stdout) console.log(`[oslo-cli stdout] ${inputPath}:\n${stdout}`)
@@ -22,7 +29,8 @@ async function runCli(inputPath: string, outputPath: string): Promise<void> {
 
 function parseWorkbook(data: Buffer): XLSX.WorkBook {
   const workbook = XLSX.read(data, { type: 'buffer' })
-  if (!workbook.SheetNames.length) throw new Error('Het werkboek bevat geen tabbladen')
+  if (!workbook.SheetNames.length)
+    throw new Error('Het werkboek bevat geen tabbladen')
   return workbook
 }
 
@@ -41,7 +49,10 @@ export default defineEventHandler(async (event) => {
   const formData = await readMultipartFormData(event)
   const file = formData?.find((part) => part.name === 'file')
   if (!file?.data) {
-    throw createError({ statusCode: 400, statusMessage: 'Geen bestand geüpload' })
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Geen bestand geüpload',
+    })
   }
 
   let workbook: XLSX.WorkBook
@@ -74,7 +85,10 @@ export default defineEventHandler(async (event) => {
         await runCli(csvPath, ttlPath)
         const ttlContent = await readFile(ttlPath, 'utf-8')
         if (!ttlContent.trim()) {
-          errors.push({ sheet: sheetName, error: 'Conversie leverde geen resultaat op' })
+          errors.push({
+            sheet: sheetName,
+            error: 'Conversie leverde geen resultaat op',
+          })
         } else {
           zip.file(`${safeName}.ttl`, ttlContent)
         }
@@ -94,7 +108,11 @@ export default defineEventHandler(async (event) => {
     const zipBuffer = await zip.generateAsync({ type: 'nodebuffer' })
 
     setResponseHeader(event, 'Content-Type', 'application/zip')
-    setResponseHeader(event, 'Content-Disposition', 'attachment; filename="codelists.zip"')
+    setResponseHeader(
+      event,
+      'Content-Disposition',
+      'attachment; filename="codelists.zip"',
+    )
 
     if (errors.length) {
       setResponseHeader(event, 'X-Conversion-Warnings', JSON.stringify(errors))
