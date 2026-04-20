@@ -9,3 +9,6 @@
 
   1.0.4
   Place the template at the correct API endpoint
+
+  1.0.5
+  Add one small entry as example to the codelist template
