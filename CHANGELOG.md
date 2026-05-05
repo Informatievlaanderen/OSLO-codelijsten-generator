@@ -16,3 +16,6 @@
   1.0.6
   feat: different template for codelist generator
   feat: ignore workbooks starting with _ in the codelist generator
+
+  1.0.7
+  fix: correct template for the codelist generator
