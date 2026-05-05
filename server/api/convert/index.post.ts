@@ -68,7 +68,9 @@ export default defineEventHandler(async (event) => {
     const zip = new JSZip()
     const errors: { sheet: string; error: string }[] = []
 
-    for (const sheetName of workbook.SheetNames) {
+    for (const sheetName of workbook.SheetNames.filter(
+      (n) => !n.startsWith('_'),
+    )) {
       const csv = sheetToCsv(workbook, sheetName)
       if (!csv.trim()) {
         errors.push({ sheet: sheetName, error: 'Tabblad is leeg' })

@@ -12,3 +12,7 @@
 
   1.0.5
   Add one small entry as example to the codelist template
+
+  1.0.6
+  feat: different template for codelist generator
+  feat: ignore workbooks starting with _ in the codelist generator
